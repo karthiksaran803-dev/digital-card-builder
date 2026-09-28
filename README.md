@@ -63,11 +63,7 @@ This project requires **zero build steps** and **zero paid services**. Deploy it
 
 2. **Push the Code**:
    ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Digital Business Card & Resume Builder"
-   git branch -M main
-   git remote add origin https://github.com/<YOUR_USERNAME>/<YOUR_REPOSITORY>.git
+   git remote add origin https://github.com/karthiksaran803-dev/digital-card-builder.git
    git push -u origin main
    ```
 
@@ -75,7 +71,7 @@ This project requires **zero build steps** and **zero paid services**. Deploy it
    - In your GitHub repository, navigate to **Settings** > **Pages** (in the left sidebar).
    - Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
    - Select `main` branch and `/ (root)` directory, then click **Save**.
-   - Within 1–2 minutes, GitHub will provide your live URL: `https://<YOUR_USERNAME>.github.io/<YOUR_REPOSITORY>/`
+   - Within 1–2 minutes, GitHub will provide your live URL: `https://karthiksaran803-dev.github.io/digital-card-builder/`
 
 ---
 
