@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free Digital Business Card & Resume Builder. Build, customize, and share a responsive digital card instantly with zero configuration.">
+  <meta name="theme-color" content="#2563eb">
+  <title>Cardify | Digital Business Card & Resume Builder</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- External CDN Libraries (Zero Build Step) -->
+  <!-- LZ-String for URL compression -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+  <!-- QRCode.js for QR Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- html2pdf.js for Client-side PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header class="app-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-address-card"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Cardify</h1>
+          <span>Digital Card & Resume Builder</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <button type="button" class="btn btn-outline btn-sm" id="loadDemoBtn" title="Load sample profile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Load Demo</span>
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" id="resetBtn" title="Clear all fields">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+          <span>Reset</span>
+        </button>
+        <button type="button" class="btn btn-secondary btn-icon" id="builderThemeToggle" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Grid -->
+  <main class="builder-layout">
+
+    <!-- LEFT COLUMN: BUILDER FORM CONTROLS -->
+    <div class="form-column">
+      
+      <!-- Panel 1: Personal Profile -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <i class="fa-solid fa-user"></i>
+              Personal Information
+            </h2>
+            <p class="panel-subtitle">Your identity, photo, and professional headline</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          
+          <!-- Photo Upload & Canvas Resizer -->
+          <div class="photo-upload-container">
+            <div class="photo-preview-box" id="avatarPreviewContainer">
+              <span class="photo-placeholder" id="avatarPlaceholder">
+                <i class="fa-solid fa-camera"></i>
+              </span>
+              <img src="" alt="Profile Preview" id="avatarImg" class="photo-preview-img">
+            </div>
+            <div class="photo-actions">
+              <div class="photo-actions-row">
+                <label for="photoInput" class="btn btn-secondary btn-sm" style="cursor: pointer;">
+                  <i class="fa-solid fa-upload"></i> Upload Photo
+                </label>
+                <input type="file" id="photoInput" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                <button type="button" class="btn btn-outline btn-sm" id="removePhotoBtn" style="display: none;">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+              </div>
+              <p class="photo-specs">Auto-resized to 200&times;200 and compressed into Base64 for URL portability.</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="fullName">
+                Full Name <span class="required-star">*</span>
+              </label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-signature input-icon"></i>
+                <input type="text" id="fullName" class="form-input" placeholder="e.g. Alex Morgan" required autocomplete="name">
+              </div>
+              <span class="invalid-feedback" id="nameError">Full name is required.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="jobTitle">Job Title / Headline</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-briefcase input-icon"></i>
+                <input type="text" id="jobTitle" class="form-input" placeholder="e.g. Senior Cloud Architect" autocomplete="organization-title">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="bio">
+              Professional Summary / Bio
+              <span class="label-hint">Max ~250 chars recommended</span>
+            </label>
+            <textarea id="bio" class="form-textarea" placeholder="Brief summary of your expertise, passions, and background..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="location">Location</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-location-dot input-icon"></i>
+              <input type="text" id="location" class="form-input" placeholder="e.g. San Francisco, CA">
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Panel 2: Contact Details & Social Profiles -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <i class="fa-solid fa-address-book"></i>
+              Contact & Social Links
+            </h2>
+            <p class="panel-subtitle">How people can reach and follow your work</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" id="email" class="form-input" placeholder="alex@example.com" autocomplete="email">
+              </div>
+              <span class="invalid-feedback" id="emailError">Please enter a valid email address.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="phone">Phone Number</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-phone input-icon"></i>
+                <input type="tel" id="phone" class="form-input" placeholder="+1 (555) 234-5678" autocomplete="tel">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="website">Portfolio / Website</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-globe input-icon"></i>
+                <input type="url" id="website" class="form-input" placeholder="https://alexmorgan.dev">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="linkedin">LinkedIn</label>
+              <div class="input-wrapper">
+                <i class="fa-brands fa-linkedin input-icon"></i>
+                <input type="text" id="linkedin" class="form-input" placeholder="username or profile link">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="github">GitHub</label>
+              <div class="input-wrapper">
+                <i class="fa-brands fa-github input-icon"></i>
+                <input type="text" id="github" class="form-input" placeholder="username or profile link">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="twitter">Twitter / X</label>
+              <div class="input-wrapper">
+                <i class="fa-brands fa-x-twitter input-icon"></i>
+                <input type="text" id="twitter" class="form-input" placeholder="@handle or profile link">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Panel 3: Skills & Expertise -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <i class="fa-solid fa-code"></i>
+              Skills & Expertise
+            </h2>
+            <p class="panel-subtitle">Highlight your key technical or domain skills</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="form-label" for="skills">
+              Skills List
+              <span class="label-hint">Comma-separated</span>
+            </label>
+            <input type="text" id="skills" class="form-input" placeholder="e.g. AWS, React, Python, Docker, Kubernetes, GraphQL, UI/UX">
+            <p class="form-hint">Separate items with commas. They will automatically render as interactive badges.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 4: Featured Projects (Up to 3) -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <i class="fa-solid fa-diagram-project"></i>
+              Featured Projects (Up to 3)
+            </h2>
+            <p class="panel-subtitle">Showcase your notable work or repository links</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          
+          <!-- Project 1 -->
+          <fieldset class="project-card-fieldset">
+            <legend><i class="fa-solid fa-folder-open"></i> Project 1</legend>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="projTitle1">Project Title</label>
+                <input type="text" id="projTitle1" class="form-input" placeholder="e.g. CloudPulse Dashboard">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="projLink1">Project Link (Optional)</label>
+                <input type="url" id="projLink1" class="form-input" placeholder="https://github.com/...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="projDesc1">One-Line Description</label>
+              <input type="text" id="projDesc1" class="form-input" placeholder="e.g. Real-time telemetry monitoring for serverless AWS Lambda workloads.">
+            </div>
+          </fieldset>
+
+          <!-- Project 2 -->
+          <fieldset class="project-card-fieldset">
+            <legend><i class="fa-solid fa-folder-open"></i> Project 2</legend>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="projTitle2">Project Title</label>
+                <input type="text" id="projTitle2" class="form-input" placeholder="e.g. Zero-Auth Gateway">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="projLink2">Project Link (Optional)</label>
+                <input type="url" id="projLink2" class="form-input" placeholder="https://github.com/...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="projDesc2">One-Line Description</label>
+              <input type="text" id="projDesc2" class="form-input" placeholder="e.g. Lightweight biometric WebAuthn authentication microservice.">
+            </div>
+          </fieldset>
+
+          <!-- Project 3 -->
+          <fieldset class="project-card-fieldset">
+            <legend><i class="fa-solid fa-folder-open"></i> Project 3</legend>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="projTitle3">Project Title</label>
+                <input type="text" id="projTitle3" class="form-input" placeholder="e.g. DevDocs AI">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="projLink3">Project Link (Optional)</label>
+                <input type="url" id="projLink3" class="form-input" placeholder="https://github.com/...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="projDesc3">One-Line Description</label>
+              <input type="text" id="projDesc3" class="form-input" placeholder="e.g. Offline developer documentation browser powered by indexed vector embeddings.">
+            </div>
+          </fieldset>
+
+        </div>
+      </section>
+
+      <!-- Panel 5: Theme & Custom Styling -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <i class="fa-solid fa-palette"></i>
+              Card Themes & Accent Color
+            </h2>
+            <p class="panel-subtitle">Select visual aesthetic and custom brand color</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          
+          <div class="form-group">
+            <label class="form-label">Select Card Theme</label>
+            <div class="theme-selector-grid">
+              
+              <!-- Modern Light -->
+              <label class="theme-card-option">
+                <input type="radio" name="cardTheme" value="modern-light" checked>
+                <div class="theme-preview-tile">
+                  <div class="theme-visual-thumb thumb-modern-light">
+                    <div class="thumb-line"></div>
+                    <div class="thumb-sub"></div>
+                  </div>
+                  <span class="theme-option-name">Modern Light</span>
+                </div>
+              </label>
+
+              <!-- Dark -->
+              <label class="theme-card-option">
+                <input type="radio" name="cardTheme" value="dark">
+                <div class="theme-preview-tile">
+                  <div class="theme-visual-thumb thumb-dark">
+                    <div class="thumb-line"></div>
+                    <div class="thumb-sub"></div>
+                  </div>
+                  <span class="theme-option-name">Dark Mode</span>
+                </div>
+              </label>
+
+              <!-- Gradient -->
+              <label class="theme-card-option">
+                <input type="radio" name="cardTheme" value="gradient">
+                <div class="theme-preview-tile">
+                  <div class="theme-visual-thumb thumb-gradient">
+                    <div class="thumb-line"></div>
+                    <div class="thumb-sub"></div>
+                  </div>
+                  <span class="theme-option-name">Aurora Gradient</span>
+                </div>
+              </label>
+
+              <!-- Minimal -->
+              <label class="theme-card-option">
+                <input type="radio" name="cardTheme" value="minimal">
+                <div class="theme-preview-tile">
+                  <div class="theme-visual-thumb thumb-minimal">
+                    <div class="thumb-line"></div>
+                    <div class="thumb-sub"></div>
+                  </div>
+                  <span class="theme-option-name">Minimalist</span>
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Accent Color</label>
+            <div class="color-picker-wrapper">
+              <div class="color-swatch-list">
+                <button type="button" class="color-swatch active" data-color="#2563eb" style="background: #2563eb;" title="Electric Blue"></button>
+                <button type="button" class="color-swatch" data-color="#10b981" style="background: #10b981;" title="Emerald"></button>
+                <button type="button" class="color-swatch" data-color="#8b5cf6" style="background: #8b5cf6;" title="Purple"></button>
+                <button type="button" class="color-swatch" data-color="#f43f5e" style="background: #f43f5e;" title="Rose"></button>
+                <button type="button" class="color-swatch" data-color="#f59e0b" style="background: #f59e0b;" title="Amber"></button>
+                <button type="button" class="color-swatch" data-color="#06b6d4" style="background: #06b6d4;" title="Cyan"></button>
+                <button type="button" class="color-swatch" data-color="#111827" style="background: #111827;" title="Obsidian"></button>
+              </div>
+              <input type="color" id="accentColorPicker" class="custom-color-input" value="#2563eb" title="Choose custom color">
+              <span class="label-hint" id="accentColorHex">#2563eb</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN: STICKY LIVE PREVIEW & ACTIONS -->
+    <div class="preview-column">
+      
+      <div class="preview-container">
+        <div class="preview-header">
+          <div class="preview-title">
+            <span class="live-indicator"></span>
+            <span>Real-time Card Preview</span>
+          </div>
+          <div class="preview-viewport-toggle">
+            <button type="button" class="viewport-btn active" id="viewFullBtn" title="Detailed Card View">Full Card</button>
+            <button type="button" class="viewport-btn" id="viewCompactBtn" title="Compact Business Card View">Compact</button>
+          </div>
+        </div>
+
+        <div class="preview-stage" id="previewStage">
+          <!-- Live Card Component Rendered Here Dynamically -->
+          <div class="digital-card theme-modern-light" id="previewCard">
+            <!-- Dynamic Content Injected via js/app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Grid -->
+      <div class="action-grid">
+        <button type="button" class="btn btn-primary" id="copyLinkBtn">
+          <i class="fa-solid fa-copy"></i> Copy Share Link
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="openCardBtn">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Card
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="showQrBtn">
+          <i class="fa-solid fa-qrcode"></i> Show QR Code
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="downloadPdfBtn">
+          <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="downloadHtmlBtn">
+          <i class="fa-solid fa-file-code"></i> Download HTML
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="downloadVcardBtn">
+          <i class="fa-solid fa-id-card"></i> Save Contact (.vcf)
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- QR CODE MODAL -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-qrcode"></i> Card QR Code
+        </h3>
+        <button type="button" class="modal-close-btn" id="closeQrModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="panel-subtitle">Scan with any smartphone camera to open this digital card instantly.</p>
+        <div class="qr-display-box" id="qrcodeTarget">
+          <!-- QRCode.js renders canvas here -->
+        </div>
+        <input type="text" id="qrShareUrlInput" class="qr-link-input" readonly>
+        <div style="display: flex; gap: 0.5rem; width: 100%;">
+          <button type="button" class="btn btn-primary btn-block" id="downloadQrBtn">
+            <i class="fa-solid fa-download"></i> Download QR (PNG)
+          </button>
+          <button type="button" class="btn btn-secondary" id="copyModalLinkBtn">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Logic -->
+  <script src="js/app.js"></script>
+</body>
+</html>

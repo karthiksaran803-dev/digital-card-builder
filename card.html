@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View digital business card and professional portfolio resume.">
+  <title>Digital Business Card | Cardify</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- External CDN Libraries -->
+  <!-- LZ-String for decompression -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="card-page-body">
+
+  <!-- Public Card Page Header & Actions -->
+  <div class="card-page-container">
+    
+    <nav class="card-page-nav" id="publicNav">
+      <a href="index.html" class="brand">
+        <div class="brand-icon" style="width: 32px; height: 32px; font-size: 1rem;">
+          <i class="fa-solid fa-address-card"></i>
+        </div>
+        <div class="brand-text">
+          <h1 style="font-size: 1rem;">Cardify</h1>
+        </div>
+      </a>
+
+      <div class="card-page-actions">
+        <a href="index.html" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-plus"></i> Create Yours
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" id="publicShareBtn" title="Copy shareable card link">
+          <i class="fa-solid fa-share-nodes"></i> Share
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" id="publicQrBtn" title="Show QR Code">
+          <i class="fa-solid fa-qrcode"></i>
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" id="publicPdfBtn" title="Export as PDF">
+          <i class="fa-solid fa-file-pdf"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Card Content Destination -->
+    <main id="cardTarget" style="width: 100%;">
+      <!-- Digital Card will be dynamically rendered here via js/card.js -->
+      <!-- In case of error/missing data, an error message is injected here -->
+    </main>
+
+  </div>
+
+  <!-- QR CODE MODAL FOR PUBLIC CARD -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-qrcode"></i> Scan to Open Card
+        </h3>
+        <button type="button" class="modal-close-btn" id="closeQrModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="qr-display-box" id="qrcodeTarget"></div>
+        <input type="text" id="qrShareUrlInput" class="qr-link-input" readonly>
+        <div style="display: flex; gap: 0.5rem; width: 100%;">
+          <button type="button" class="btn btn-primary btn-block" id="downloadQrBtn">
+            <i class="fa-solid fa-download"></i> Download QR (PNG)
+          </button>
+          <button type="button" class="btn btn-secondary" id="copyModalLinkBtn">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Card Renderer Script -->
+  <script src="js/card.js"></script>
+</body>
+</html>
